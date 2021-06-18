@@ -61,6 +61,12 @@
             Nuxt GitHub
           </a>
         </v-card-text>
+
+        <div v-if="isLoaded">
+          <users :users="users" />
+        </div>
+
+
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -79,11 +85,32 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import Users from '~/components/Users.vue'
 
 export default {
   components: {
     Logo,
-    VuetifyLogo
+    VuetifyLogo,
+    Users,
+  },
+  data () {
+    return {
+      isLoaded: false
+    }
+  },
+  async created () {
+    await this.$store.dispatch('loadUsers')
+    this.isLoaded = true
+  },
+  async mounted () {
+    console.log('Users:', this.users)
+  },
+  computed: {
+    users: {
+      get () {
+        return this.$store.getters['getUsers']
+      }
+    }
   }
 }
 </script>
